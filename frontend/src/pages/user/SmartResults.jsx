@@ -26,7 +26,7 @@ function SmartResults() {
     };
 
     return (
-        <div className="app-screen" style={{ padding: '0', backgroundColor: '#050505' }}>
+        <div className="app-screen" style={{ padding: '0', backgroundColor: 'var(--bg-color)' }}>
             <div style={{ padding: '24px', backgroundColor: 'var(--surface)', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, zIndex: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
                     <ArrowLeft size={24} cursor="pointer" onClick={() => navigate(-1)} />
@@ -52,7 +52,7 @@ function SmartResults() {
                     <div key={salon.id} style={{ 
                         backgroundColor: 'var(--surface-light)', borderRadius: '20px', 
                         overflow: 'hidden', border: '1px solid var(--primary)', // Highlight border to show it's a smart match
-                        boxShadow: '0 4px 20px rgba(139, 92, 246, 0.1)'
+                        boxShadow: '0 4px 20px var(--primary-glow)'
                     }}>
                         <div style={{ display: 'flex', padding: '16px', gap: '16px' }}>
                             <img src={salon.image} alt={salon.name} style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover' }} />
@@ -65,7 +65,7 @@ function SmartResults() {
                             </div>
                         </div>
                         
-                        <div style={{ backgroundColor: 'rgba(139, 92, 246, 0.05)', padding: '16px', borderTop: '1px solid var(--border)' }}>
+                        <div style={{ backgroundColor: 'var(--primary-glow)', padding: '16px', borderTop: '1px solid var(--border)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                                 <div>
                                     <div style={{ fontWeight: 'bold', color: 'var(--primary)' }}>Guaranteed Slot</div>

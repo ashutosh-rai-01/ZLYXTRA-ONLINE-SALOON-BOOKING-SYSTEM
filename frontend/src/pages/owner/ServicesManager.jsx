@@ -196,7 +196,7 @@ function ServicesManager() {
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                         <h2 style={{ fontSize: '1.1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Sparkles size={18} color="var(--primary)" />
+                            <Sparkles size={18} color="var(--owner-accent)" />
                             {currentService._id ? 'Edit Service' : 'Add New Service'}
                         </h2>
                         <button onClick={() => setIsEditing(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
@@ -213,7 +213,7 @@ function ServicesManager() {
                     {/* Quick Suggestions (Only when adding) */}
                     {!currentService._id && (
                         <div style={{ marginBottom: '16px' }}>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>⚡ Use Suggestion:</div>
+                            <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--owner-accent)', marginBottom: '8px' }}>⚡ Use Suggestion:</div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                 {popularTemplates.map((tpl, i) => (
                                     <button 
@@ -269,10 +269,10 @@ function ServicesManager() {
                         </div>
 
                         <div style={{ 
-                            backgroundColor: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.1)', 
+                            backgroundColor: 'var(--owner-accent-glow)', border: '1px solid rgba(99, 102, 241, 0.1)', 
                             padding: '10px 12px', borderRadius: '10px', display: 'flex', gap: '8px', alignItems: 'flex-start' 
                         }}>
-                            <AlertCircle size={16} color="var(--primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
+                            <AlertCircle size={16} color="var(--owner-accent)" style={{ marginTop: '2px', flexShrink: 0 }} />
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: '1.3' }}>
                                 <strong>Tip:</strong> Keep the service duration precise. Customers will be offered dynamic scheduling time-slots computed exactly on these durations.
                             </span>
@@ -310,8 +310,8 @@ function ServicesManager() {
                         }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                                 <div style={{ 
-                                    backgroundColor: 'rgba(139, 92, 246, 0.1)', 
-                                    color: 'var(--primary)', 
+                                    backgroundColor: 'var(--owner-accent-glow)', 
+                                    color: 'var(--owner-accent)', 
                                     padding: '12px', 
                                     borderRadius: '12px' 
                                 }}>
@@ -320,7 +320,7 @@ function ServicesManager() {
                                 <div>
                                     <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '4px' }}>{svc.name}</h3>
                                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                        <span style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'bold' }}>₹{svc.price}</span>
+                                        <span style={{ fontSize: '0.8rem', color: 'var(--owner-accent)', fontWeight: 'bold' }}>₹{svc.price}</span>
                                         <span style={{ width: '4px', height: '4px', backgroundColor: 'var(--border)', borderRadius: '50%' }}></span>
                                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '3px' }}>
                                             <Clock size={12} /> {svc.duration} Mins
@@ -339,7 +339,7 @@ function ServicesManager() {
                                         transition: 'color 0.2s', display: 'flex', alignItems: 'center'
                                     }}
                                     title="Edit Service"
-                                    onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
+                                    onMouseEnter={e => e.currentTarget.style.color = 'var(--owner-accent)'}
                                     onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
                                 >
                                     <Edit3 size={18} />

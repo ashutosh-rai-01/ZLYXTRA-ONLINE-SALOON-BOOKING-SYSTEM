@@ -12,7 +12,7 @@ function OwnerLogin() {
     const [loading, setLoading] = useState(false);
     
     const navigate = useNavigate();
-    const { login, register } = useContext(AuthContext);
+    const { login, register, logout } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,9 +26,12 @@ function OwnerLogin() {
                 res = await login(phone, password);
             }
             
-            if (res.user.role === 'admin') navigate('/admin/salons');
-            else if (res.user.role === 'owner') navigate('/owner/dashboard');
-            else navigate('/home');
+            if (res.user.role !== 'owner') {
+                logout();
+                setError('This login is strictly for Salon Partners. Customers must use the Customer Portal.');
+                return;
+            }
+            navigate('/owner/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Authentication failed');
         } finally {

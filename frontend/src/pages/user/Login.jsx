@@ -7,7 +7,7 @@ function Login() {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useContext(AuthContext);
+    const { login, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -15,9 +15,12 @@ function Login() {
         setError('');
         try {
             const res = await login(phone, password);
-            if (res.user.role === 'admin') navigate('/admin/dashboard');
-            else if (res.user.role === 'owner') navigate('/owner/dashboard');
-            else navigate('/home');
+            if (res.user.role !== 'user') {
+                logout();
+                setError('This login is strictly for Customers. Partners must use the Partner Portal.');
+                return;
+            }
+            navigate('/home');
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
         }
@@ -28,7 +31,7 @@ function Login() {
             height: '100vh', 
             display: 'flex', 
             flexDirection: 'column', 
-            backgroundColor: '#f8fafc',
+            backgroundColor: 'var(--bg-color)',
             padding: '20px 24px'
         }}>
             {/* Top Back Action Row */}
@@ -38,14 +41,14 @@ function Login() {
                     style={{ 
                         width: '40px', 
                         height: '40px', 
-                        backgroundColor: 'white', 
+                        backgroundColor: 'var(--surface)', 
                         borderRadius: '50%', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center',
                         cursor: 'pointer',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                        border: '1px solid #cbd5e1'
+                        border: '1px solid var(--border)'
                     }}
                 >
                     <ArrowLeft size={18} color="#0f172a" />
@@ -88,7 +91,7 @@ function Login() {
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="form-input"
-                            style={{ backgroundColor: 'white', border: '1px solid #cbd5e1' }}
+                            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
                             required
                         />
                     </div>
@@ -101,7 +104,7 @@ function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="form-input"
-                            style={{ backgroundColor: 'white', border: '1px solid #cbd5e1' }}
+                            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
                             required
                         />
                     </div>

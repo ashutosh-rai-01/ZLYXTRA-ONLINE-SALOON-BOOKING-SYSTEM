@@ -10,7 +10,7 @@ function AdminLogin() {
     const [loading, setLoading] = useState(false);
     
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
+    const { login, logout } = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -19,10 +19,12 @@ function AdminLogin() {
         try {
             const res = await login(phone, password);
             
-            // Smart routing: Ensure they land where they belong
-            if (res.user.role === 'admin') navigate('/admin/salons');
-            else if (res.user.role === 'owner') navigate('/owner/dashboard');
-            else navigate('/home');
+            if (res.user.role !== 'admin') {
+                logout();
+                setError('Unauthorized access. Admin portal is strictly restricted.');
+                return;
+            }
+            navigate('/admin/dashboard');
             
         } catch (err) {
             setError(err.response?.data?.message || "Invalid Admin Credentials");

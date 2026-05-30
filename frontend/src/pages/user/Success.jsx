@@ -27,7 +27,7 @@ function Success() {
     return (
         <div className="app-screen" style={{ 
             padding: '40px 20px', 
-            backgroundColor: '#f8fafc', 
+            backgroundColor: 'var(--bg-color)', 
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center', 
@@ -62,8 +62,8 @@ function Success() {
                 width: '100%', 
                 maxWidth: '380px', 
                 padding: '24px', 
-                backgroundColor: 'white', 
-                border: '1px solid #e2e8f0',
+                backgroundColor: 'var(--surface)', 
+                border: '1px solid var(--border)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '16px',
@@ -95,7 +95,7 @@ function Success() {
                     style={{ 
                         height: '48px', 
                         borderRadius: '14px', 
-                        backgroundColor: 'white', 
+                        backgroundColor: 'var(--surface)', 
                         border: '1px solid #cbd5e1',
                         color: '#475569',
                         fontSize: '0.9rem',
@@ -109,7 +109,7 @@ function Success() {
                     <Calendar size={18} /> Add to Calendar
                 </button>
 
-                {/* Done solid pink button */}
+                {/* Done solid button */}
                 <button 
                     onClick={() => navigate('/home')}
                     className="btn-primary"

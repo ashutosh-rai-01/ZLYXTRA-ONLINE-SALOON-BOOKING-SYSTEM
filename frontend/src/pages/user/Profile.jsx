@@ -104,7 +104,7 @@ function Profile() {
 
             {/* Profile Avatar / Hero Section */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '32px' }}>
-                <div style={{ width: '100px', height: '100px', borderRadius: '50%', backgroundColor: 'rgba(139, 92, 246, 0.1)', border: '2px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
+                <div style={{ width: '100px', height: '100px', borderRadius: '50%', backgroundColor: 'var(--primary-glow)', border: '2px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
                     <User size={50} color="var(--primary)" />
                     {!isEditing && (
                         <button 
@@ -164,7 +164,7 @@ function Profile() {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Role</span>
-                                <span style={{ fontWeight: '600', textTransform: 'uppercase', fontSize: '0.8rem', backgroundColor: 'rgba(139, 92, 246, 0.1)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '6px' }}>{user?.role || 'User'}</span>
+                                <span style={{ fontWeight: '600', textTransform: 'uppercase', fontSize: '0.8rem', backgroundColor: 'var(--primary-glow)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '6px' }}>{user?.role || 'User'}</span>
                             </div>
                         </div>
                     </div>
@@ -235,10 +235,9 @@ function Profile() {
                                 <UserCheck size={14} /> Gender
                             </label>
                             <select 
-                                className="form-input"
+                                className="form-select"
                                 value={formData.gender} 
                                 onChange={e => setFormData({ ...formData, gender: e.target.value })}
-                                style={{ color: 'white', backgroundColor: '#1e293b', border: '1px solid var(--border)', cursor: 'pointer' }}
                             >
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
@@ -257,7 +256,6 @@ function Profile() {
                                 className="form-input" 
                                 value={formData.birthDate} 
                                 onChange={e => setFormData({ ...formData, birthDate: e.target.value })}
-                                style={{ color: 'white' }}
                             />
                         </div>
                         

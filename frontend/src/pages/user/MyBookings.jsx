@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, MapPin, Calendar, Clock } from 'lucide-react';
+import { ArrowLeft, Search, Calendar, Clock, CalendarDays, Heart, User } from 'lucide-react';
 import api from '../../api/axios';
 
 function MyBookings() {
@@ -103,18 +103,31 @@ function MyBookings() {
                 )}
             </div>
 
-             {/* Bottom Nav */}
-             <div style={{ 
-                position: 'fixed', bottom: 0, width: '100%', maxWidth: '480px', 
-                backgroundColor: 'var(--surface)', opacity: 0.95, backdropFilter: 'blur(10px)',
-                display: 'flex', justifyContent: 'space-around', padding: '15px 0',
-                borderTop: '1px solid var(--border)'
+            {/* Bottom Nav Bar (Customer App View) */}
+            <div style={{ 
+                position: 'fixed', 
+                bottom: 0, 
+                left: 0,
+                right: 0,
+                backgroundColor: 'white', 
+                display: 'flex', 
+                justifyContent: 'space-around', 
+                padding: '12px 0 16px 0',
+                borderTop: '1px solid #e2e8f0', 
+                zIndex: 100,
+                boxShadow: '0 -4px 10px rgba(0,0,0,0.03)'
             }}>
-                <div onClick={() => navigate('/home')} style={{ color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <Search size={24} /> <span style={{ fontSize: '0.7rem' }}>Explore</span>
+                <div onClick={() => navigate('/home')} style={{ color: '#94a3b8', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+                    <Search size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: '500' }}>Home</span>
                 </div>
-                <div onClick={() => navigate('/my-bookings')} style={{ color: 'var(--primary)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <MapPin size={24} /> <span style={{ fontSize: '0.7rem' }}>Bookings</span>
+                <div onClick={() => navigate('/my-bookings')} style={{ color: '#3b82f6', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+                    <CalendarDays size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: '700' }}>Bookings</span>
+                </div>
+                <div style={{ color: '#94a3b8', cursor: 'not-allowed', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', opacity: 0.6 }}>
+                    <Heart size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: '500' }}>Favorites</span>
+                </div>
+                <div onClick={() => navigate('/profile')} style={{ color: '#94a3b8', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+                    <User size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: '500' }}>Profile</span>
                 </div>
             </div>
         </div>

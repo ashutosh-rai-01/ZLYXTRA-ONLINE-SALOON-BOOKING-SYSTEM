@@ -8,7 +8,7 @@ function Welcome() {
     const { user } = useContext(AuthContext);
 
     return (
-        <div className="app-screen" style={{ backgroundColor: '#f8fafc', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+        <div className="app-screen" style={{ backgroundColor: 'var(--bg-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <div style={{
                     width: '80px', height: '80px', borderRadius: '22px',
@@ -29,11 +29,18 @@ function Welcome() {
                 
                 {/* Customer Portal */}
                 <div 
-                    onClick={() => navigate(user && user.role === 'user' ? '/home' : '/login')}
+                    onClick={() => {
+                        if (user && user.role !== 'user') {
+                            localStorage.removeItem('token');
+                            window.location.href = '/login';
+                        } else {
+                            navigate(user && user.role === 'user' ? '/home' : '/login');
+                        }
+                    }}
                     className="glass-card"
                     style={{ 
                         display: 'flex', alignItems: 'center', gap: '16px',
-                        cursor: 'pointer', transition: 'all 0.2s', backgroundColor: 'white', border: '1px solid #cbd5e1'
+                        cursor: 'pointer', transition: 'all 0.2s', backgroundColor: 'var(--surface)', border: '1px solid var(--border)'
                     }}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -41,7 +48,7 @@ function Welcome() {
                     }}
                     onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'none';
-                        e.currentTarget.style.borderColor = '#cbd5e1';
+                        e.currentTarget.style.borderColor = 'var(--border)';
                     }}
                 >
                     <div style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', padding: '14px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -55,11 +62,18 @@ function Welcome() {
 
                 {/* Partner Portal (Owner) */}
                 <div 
-                    onClick={() => navigate(user && user.role === 'owner' ? '/owner/dashboard' : '/owner/login')}
+                    onClick={() => {
+                        if (user && user.role !== 'owner') {
+                            localStorage.removeItem('token');
+                            window.location.href = '/owner/login';
+                        } else {
+                            navigate(user && user.role === 'owner' ? '/owner/dashboard' : '/owner/login');
+                        }
+                    }}
                     className="glass-card"
                     style={{ 
                         display: 'flex', alignItems: 'center', gap: '16px',
-                        cursor: 'pointer', transition: 'all 0.2s', backgroundColor: 'white', border: '1px solid #cbd5e1'
+                        cursor: 'pointer', transition: 'all 0.2s', backgroundColor: 'var(--surface)', border: '1px solid var(--border)'
                     }}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -67,7 +81,7 @@ function Welcome() {
                     }}
                     onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'none';
-                        e.currentTarget.style.borderColor = '#cbd5e1';
+                        e.currentTarget.style.borderColor = 'var(--border)';
                     }}
                 >
                     <div style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', padding: '14px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -81,11 +95,18 @@ function Welcome() {
 
                 {/* Admin Portal */}
                 <div 
-                    onClick={() => navigate(user && user.role === 'admin' ? '/admin/dashboard' : '/admin/login')}
+                    onClick={() => {
+                        if (user && user.role !== 'admin') {
+                            localStorage.removeItem('token');
+                            window.location.href = '/admin/login';
+                        } else {
+                            navigate(user && user.role === 'admin' ? '/admin/dashboard' : '/admin/login');
+                        }
+                    }}
                     className="glass-card"
                     style={{ 
                         display: 'flex', alignItems: 'center', gap: '16px',
-                        cursor: 'pointer', transition: 'all 0.2s', backgroundColor: 'white', border: '1px solid #cbd5e1'
+                        cursor: 'pointer', transition: 'all 0.2s', backgroundColor: 'var(--surface)', border: '1px solid var(--border)'
                     }}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -93,7 +114,7 @@ function Welcome() {
                     }}
                     onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'none';
-                        e.currentTarget.style.borderColor = '#cbd5e1';
+                        e.currentTarget.style.borderColor = 'var(--border)';
                     }}
                 >
                     <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', padding: '14px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

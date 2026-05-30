@@ -141,7 +141,7 @@ function SlotSelection() {
     return (
         <div className="app-screen" style={{ 
             padding: '24px 20px 100px 20px', 
-            backgroundColor: '#f8fafc', 
+            backgroundColor: 'var(--bg-color)', 
             display: 'flex', 
             flexDirection: 'column', 
             gap: '24px', 

@@ -29,7 +29,7 @@ function Register() {
             height: '100vh', 
             display: 'flex', 
             flexDirection: 'column', 
-            backgroundColor: '#f8fafc',
+            backgroundColor: 'var(--bg-color)',
             padding: '20px 24px'
         }}>
             {/* Top Back Action Row */}
@@ -39,14 +39,14 @@ function Register() {
                     style={{ 
                         width: '40px', 
                         height: '40px', 
-                        backgroundColor: 'white', 
+                        backgroundColor: 'var(--surface)', 
                         borderRadius: '50%', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center',
                         cursor: 'pointer',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                        border: '1px solid #cbd5e1'
+                        border: '1px solid var(--border)'
                     }}
                 >
                     <ArrowLeft size={18} color="#0f172a" />
@@ -89,7 +89,7 @@ function Register() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             className="form-input"
-                            style={{ backgroundColor: 'white', border: '1px solid #cbd5e1' }}
+                            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
                             required
                         />
                     </div>
@@ -102,7 +102,7 @@ function Register() {
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="form-input"
-                            style={{ backgroundColor: 'white', border: '1px solid #cbd5e1' }}
+                            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
                             required
                         />
                     </div>
@@ -115,7 +115,7 @@ function Register() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="form-input"
-                            style={{ backgroundColor: 'white', border: '1px solid #cbd5e1' }}
+                            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
                             required
                         />
                     </div>

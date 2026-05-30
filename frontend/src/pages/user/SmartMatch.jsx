@@ -60,7 +60,7 @@ function SmartMatch() {
                                 onClick={() => setSelectedService(service)}
                                 style={{
                                     padding: '20px', borderRadius: '16px', cursor: 'pointer',
-                                    backgroundColor: selectedService?.id === service.id ? 'rgba(139, 92, 246, 0.15)' : 'var(--surface-light)',
+                                    backgroundColor: selectedService?.id === service.id ? 'var(--primary-glow)' : 'var(--surface-light)',
                                     border: `1px solid ${selectedService?.id === service.id ? 'var(--primary)' : 'var(--border)'}`,
                                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                                     transition: 'all 0.2s'
@@ -119,7 +119,7 @@ function SmartMatch() {
                                         onClick={() => setSelectedTime(slot)}
                                         style={{
                                             padding: '12px 0', textAlign: 'center', borderRadius: '8px', cursor: 'pointer',
-                                            backgroundColor: selectedTime === slot ? 'rgba(139, 92, 246, 0.2)' : 'var(--surface-light)',
+                                            backgroundColor: selectedTime === slot ? 'var(--primary-glow)' : 'var(--surface-light)',
                                             border: `1px solid ${selectedTime === slot ? 'var(--primary)' : 'var(--border)'}`,
                                             color: selectedTime === slot ? 'var(--primary)' : 'var(--text-main)'
                                         }}

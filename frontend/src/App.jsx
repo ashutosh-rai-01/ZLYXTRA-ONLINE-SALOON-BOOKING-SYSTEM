@@ -32,6 +32,36 @@ import AdminSalons from './pages/admin/AdminSalons';
 import AdminBookings from './pages/admin/AdminBookings';
 import AdminUsers from './pages/admin/AdminUsers';
 
+// Strict Guard for Customer pages
+const CustomerRoute = ({ user, children }) => {
+  if (!user) return <Navigate to="/" />;
+  if (user.role !== 'user') {
+    const route = user.role === 'admin' ? '/admin/dashboard' : '/owner/dashboard';
+    return <Navigate to={route} replace />;
+  }
+  return children;
+};
+
+// Strict Guard for Salon Owner pages
+const OwnerRoute = ({ user, children }) => {
+  if (!user) return <Navigate to="/" />;
+  if (user.role !== 'owner') {
+    const route = user.role === 'admin' ? '/admin/dashboard' : '/home';
+    return <Navigate to={route} replace />;
+  }
+  return children;
+};
+
+// Strict Guard for Admin pages
+const AdminRoute = ({ user, children }) => {
+  if (!user) return <Navigate to="/" />;
+  if (user.role !== 'admin') {
+    const route = user.role === 'owner' ? '/owner/dashboard' : '/home';
+    return <Navigate to={route} replace />;
+  }
+  return children;
+};
+
 function App() {
   const { user, loading } = useContext(AuthContext);
 
@@ -59,21 +89,21 @@ function App() {
         <Route path="/login" element={!user ? <Login /> : <Navigate to={getDashboardRoute()} />} />
         <Route path="/register" element={!user ? <Register /> : <Navigate to={getDashboardRoute()} />} />
         
-        {/* Protected Routes */}
-        <Route path="/home" element={user ? <HomeDashboard /> : <Navigate to="/" />} />
-        <Route path="/smart-match" element={user ? <SmartMatch /> : <Navigate to="/" />} />
-        <Route path="/smart-results" element={user ? <SmartResults /> : <Navigate to="/" />} />
-        <Route path="/salon/:id" element={user ? <SalonDetails /> : <Navigate to="/" />} />
-        <Route path="/slot-selection" element={user ? <SlotSelection /> : <Navigate to="/" />} />
-        <Route path="/checkout" element={user ? <BookingConfirmation /> : <Navigate to="/" />} />
-        <Route path="/success" element={user ? <Success /> : <Navigate to="/" />} />
-        <Route path="/my-bookings" element={user ? <MyBookings /> : <Navigate to="/" />} />
-        <Route path="/profile" element={user ? <Profile /> : <Navigate to="/" />} />
+        {/* Protected Customer Routes */}
+        <Route path="/home" element={<CustomerRoute user={user}><HomeDashboard /></CustomerRoute>} />
+        <Route path="/smart-match" element={<CustomerRoute user={user}><SmartMatch /></CustomerRoute>} />
+        <Route path="/smart-results" element={<CustomerRoute user={user}><SmartResults /></CustomerRoute>} />
+        <Route path="/salon/:id" element={<CustomerRoute user={user}><SalonDetails /></CustomerRoute>} />
+        <Route path="/slot-selection" element={<CustomerRoute user={user}><SlotSelection /></CustomerRoute>} />
+        <Route path="/checkout" element={<CustomerRoute user={user}><BookingConfirmation /></CustomerRoute>} />
+        <Route path="/success" element={<CustomerRoute user={user}><Success /></CustomerRoute>} />
+        <Route path="/my-bookings" element={<CustomerRoute user={user}><MyBookings /></CustomerRoute>} />
+        <Route path="/profile" element={<CustomerRoute user={user}><Profile /></CustomerRoute>} />
 
         {/* Owner Routes */}
-        <Route path="/owner/login" element={<OwnerLogin />} />
-        <Route path="/owner/onboarding" element={<SalonOnboarding />} />
-        <Route path="/owner" element={<OwnerLayout />}>
+        <Route path="/owner/login" element={!user ? <OwnerLogin /> : <Navigate to={getDashboardRoute()} />} />
+        <Route path="/owner/onboarding" element={<OwnerRoute user={user}><SalonOnboarding /></OwnerRoute>} />
+        <Route path="/owner" element={<OwnerRoute user={user}><OwnerLayout /></OwnerRoute>}>
           <Route path="dashboard" element={<OwnerDashboard />} />
           <Route path="bookings" element={<BookingManagement />} />
           <Route path="availability" element={<AvailabilityManager />} />
@@ -82,8 +112,8 @@ function App() {
 
 
         {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/login" element={!user ? <AdminLogin /> : <Navigate to={getDashboardRoute()} />} />
+        <Route path="/admin" element={<AdminRoute user={user}><AdminLayout /></AdminRoute>}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="salons" element={<AdminSalons />} />

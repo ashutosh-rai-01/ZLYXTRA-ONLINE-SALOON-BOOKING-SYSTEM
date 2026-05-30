@@ -23,7 +23,7 @@ function AvailabilityManager() {
 
             <div style={{ backgroundColor: 'var(--surface-light)', padding: '16px', borderRadius: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Calendar size={20} color="var(--primary)" />
+                    <Calendar size={20} color="var(--owner-accent)" />
                     <span style={{ fontWeight: 'bold' }}>Today</span>
                 </div>
                 <div style={{ color: 'var(--text-muted)' }}>{date}</div>

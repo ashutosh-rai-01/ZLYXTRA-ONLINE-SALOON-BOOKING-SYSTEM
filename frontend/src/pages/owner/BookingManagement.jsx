@@ -59,7 +59,7 @@ function BookingManagement() {
                         <div key={booking._id} style={{ backgroundColor: 'var(--surface-light)', padding: '20px', borderRadius: '16px', border: '1px solid var(--border)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
                                 <div>
-                                    <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'bold', marginBottom: '4px' }}>{booking.date} | {booking.startTime}</div>
+                                    <div style={{ fontSize: '0.8rem', color: 'var(--owner-accent)', fontWeight: 'bold', marginBottom: '4px' }}>{booking.date} | {booking.startTime}</div>
                                     <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{booking.userId?.name || 'Customer'}</h3>
                                 </div>
                                 <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>₹{booking.service?.price}</div>

@@ -5,11 +5,13 @@ import {
     Calendar, IndianRupee, Star, Settings, LogOut 
 } from 'lucide-react';
 import api from '../../api/axios';
+import { AuthContext } from '../../context/AuthContext';
 
 function OwnerLayout() {
     const navigate = useNavigate();
     const location = useLocation();
     const [salon, setSalon] = React.useState(null);
+    const { logout } = React.useContext(AuthContext);
 
     React.useEffect(() => {
         const root = document.getElementById('root');
@@ -53,12 +55,12 @@ function OwnerLayout() {
     ];
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        logout();
         navigate('/owner/login');
     };
 
     return (
-        <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: '#f8fafc', color: '#0f172a', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: 'var(--bg-color)', color: 'var(--text-main)', overflow: 'hidden' }}>
             
             {/* Sidebar (Sleek Dark Navy) */}
             <div style={{ 

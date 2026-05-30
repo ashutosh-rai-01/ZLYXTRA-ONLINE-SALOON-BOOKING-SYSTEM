@@ -47,7 +47,7 @@ function SalonDetails() {
     return (
         <div className="app-screen" style={{ 
             padding: '0 0 100px 0', 
-            backgroundColor: '#f8fafc', 
+            backgroundColor: 'var(--bg-color)', 
             display: 'flex', 
             flexDirection: 'column', 
             minHeight: '100vh',

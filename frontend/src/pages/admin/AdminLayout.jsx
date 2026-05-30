@@ -4,10 +4,12 @@ import {
     LayoutDashboard, Store, Users, CalendarDays, Scissors, 
     CreditCard, Star, FileBarChart2, Settings, LifeBuoy, LogOut 
 } from 'lucide-react';
+import { AuthContext } from '../../context/AuthContext';
 
 function AdminLayout() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { logout } = React.useContext(AuthContext);
 
     React.useEffect(() => {
         const root = document.getElementById('root');
@@ -40,12 +42,12 @@ function AdminLayout() {
     ];
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        logout();
         navigate('/');
     };
 
     return (
-        <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: '#f1f5f9', color: '#0f172a', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: 'var(--bg-color)', color: 'var(--text-main)', overflow: 'hidden' }}>
             
             {/* Sidebar (Sleek Dark Navy) */}
             <div style={{ 

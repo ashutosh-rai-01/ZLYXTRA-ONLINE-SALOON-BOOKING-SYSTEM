@@ -43,14 +43,7 @@ function AdminBookings() {
                 </div>
                 <button 
                     onClick={fetchBookings}
-                    style={{ 
-                        display: 'flex', alignItems: 'center', gap: '6px',
-                        padding: '10px 16px', backgroundColor: 'white', border: '1px solid #cbd5e1',
-                        borderRadius: '12px', fontSize: '0.85rem', fontWeight: '600', color: '#475569',
-                        cursor: 'pointer', transition: 'all 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                    className="btn-outline"
                 >
                     <RefreshCw size={15} /> Refresh List
                 </button>

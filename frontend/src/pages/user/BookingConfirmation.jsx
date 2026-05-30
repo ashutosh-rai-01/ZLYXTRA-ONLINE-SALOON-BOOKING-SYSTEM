@@ -36,7 +36,7 @@ function BookingConfirmation() {
     return (
         <div className="app-screen" style={{ 
             padding: '24px 20px 100px 20px', 
-            backgroundColor: '#f8fafc', 
+            backgroundColor: 'var(--bg-color)', 
             display: 'flex', 
             flexDirection: 'column', 
             gap: '24px', 
@@ -52,7 +52,7 @@ function BookingConfirmation() {
                         style={{ 
                             width: '40px', 
                             height: '40px', 
-                            backgroundColor: 'white', 
+                            backgroundColor: 'var(--surface)', 
                             borderRadius: '50%', 
                             display: 'flex', 
                             alignItems: 'center', 
@@ -67,14 +67,14 @@ function BookingConfirmation() {
                 </div>
                 <div 
                     onClick={() => navigate('/home')}
-                    style={{ cursor: 'pointer', padding: '6px', borderRadius: '50%', backgroundColor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+                    style={{ cursor: 'pointer', padding: '6px', borderRadius: '50%', backgroundColor: 'var(--surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
                 >
                     <X size={18} color="#0f172a" />
                 </div>
             </div>
 
             {/* Salon Card Info */}
-            <div className="glass-card" style={{ padding: '16px', display: 'flex', gap: '16px', border: '1px solid #e2e8f0', backgroundColor: 'white' }}>
+            <div className="glass-card" style={{ padding: '16px', display: 'flex', gap: '16px', border: '1px solid var(--border)', backgroundColor: 'var(--surface)' }}>
                 <img 
                     src={bookingData.salon.image} 
                     alt={bookingData.salon.name} 
@@ -89,7 +89,7 @@ function BookingConfirmation() {
             </div>
 
             {/* Booking Specifics */}
-            <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', border: '1px solid #e2e8f0', backgroundColor: 'white' }}>
+            <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', border: '1px solid var(--border)', backgroundColor: 'var(--surface)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                         <h4 style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0f172a', margin: 0 }}>{bookingData.service.name}</h4>
@@ -117,13 +117,13 @@ function BookingConfirmation() {
             {/* Total Amount & Payment Selection */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {/* Total amount bar */}
-                <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', backgroundColor: 'white' }}>
+                <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid var(--border)', backgroundColor: 'var(--surface)' }}>
                     <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#475569' }}>Total Amount</span>
                     <span style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0f172a' }}>₹{bookingData.price}</span>
                 </div>
 
                 {/* Payment Method bar */}
-                <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', backgroundColor: 'white', cursor: 'pointer' }}>
+                <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid var(--border)', backgroundColor: 'var(--surface)', cursor: 'pointer' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <CreditCard size={18} color="#3b82f6" />
                         <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#475569' }}>Payment Method</span>
@@ -141,9 +141,9 @@ function BookingConfirmation() {
                 bottom: 0, 
                 left: 0, 
                 right: 0, 
-                backgroundColor: 'white', 
+                backgroundColor: 'var(--surface)', 
                 padding: '16px 20px 24px 20px', 
-                borderTop: '1px solid #e2e8f0',
+                borderTop: '1px solid var(--border)',
                 zIndex: 100
             }}>
                 <button 

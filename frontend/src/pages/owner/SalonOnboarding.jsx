@@ -90,10 +90,10 @@ function SalonOnboarding() {
     ];
 
     return (
-        <div className="app-screen" style={{ padding: '24px', backgroundColor: '#111827', overflowY: 'auto' }}>
+        <div className="app-screen" style={{ padding: '24px', backgroundColor: 'var(--bg-color)', overflowY: 'auto' }}>
             <h1 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>Setup your Salon</h1>
             <div style={{ height: '4px', backgroundColor: 'var(--surface-light)', borderRadius: '2px', marginBottom: '30px', display: 'flex' }}>
-                <div style={{ width: step === 1 ? '50%' : '100%', backgroundColor: 'var(--primary)', borderRadius: '2px', transition: 'width 0.3s' }}></div>
+                <div style={{ width: step === 1 ? '50%' : '100%', backgroundColor: 'var(--owner-accent)', borderRadius: '2px', transition: 'width 0.3s' }}></div>
             </div>
 
             {step === 1 && (
@@ -129,11 +129,11 @@ function SalonOnboarding() {
 
                     {/* Quick Add Templates */}
                     <div style={{ backgroundColor: 'var(--surface-light)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>⚡ Quick-Add Popular Services:</div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--owner-accent)', marginBottom: '8px' }}>⚡ Quick-Add Popular Services:</div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                             {serviceTemplates.map((tpl, i) => (
                                 <button key={i} onClick={() => handleQuickAddService(tpl.name, tpl.price, tpl.duration)} style={{ 
-                                    background: 'rgba(139, 92, 246, 0.1)', border: '1px dashed var(--primary)', 
+                                    background: 'var(--owner-accent-glow)', border: '1px dashed var(--owner-accent)', 
                                     color: 'var(--text-main)', fontSize: '0.75rem', padding: '6px 10px', 
                                     borderRadius: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' 
                                 }}>
