@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://zlyxtra-backend.onrender.com/api',
+    baseURL: import.meta.env.VITE_API_URL || 'https://zlyxtra-backend-rd1e.onrender.com/api',
 });
 
 // Add a request interceptor to include the JWT token
