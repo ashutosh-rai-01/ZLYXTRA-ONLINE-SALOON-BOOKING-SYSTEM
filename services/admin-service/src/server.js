@@ -14,5 +14,5 @@ app.use(cors());
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/', adminRoutes); // Gateway maps /api/admin to /
 
-const PORT = 5006;
+const PORT = process.env.PORT || 5006;
 app.listen(PORT, () => console.log(`🛠️ Admin Service running on port ${PORT}`));

@@ -16,5 +16,5 @@ const availabilityRoutes = require('./routes/availabilityRoutes');
 app.use('/', bookingRoutes); // Gateway maps /api/bookings to /
 // Note: You may want to configure Gateway to map /api/availability to /availability instead
 
-const PORT = 5003;
+const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => console.log(`📅 Booking Service running on port ${PORT}`));

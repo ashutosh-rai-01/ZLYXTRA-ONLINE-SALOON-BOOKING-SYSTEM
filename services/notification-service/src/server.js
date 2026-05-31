@@ -12,5 +12,5 @@ app.post('/send', (req, res) => {
     res.json({ success: true, message: 'Notification sent!' });
 });
 
-const PORT = 5005;
+const PORT = process.env.PORT || 5005;
 app.listen(PORT, () => console.log(`🔔 Notification Service running on port ${PORT}`));

@@ -14,5 +14,5 @@ app.use(cors());
 const salonRoutes = require('./routes/salonRoutes');
 app.use('/', salonRoutes); // Gateway maps /api/salon to /
 
-const PORT = 5002;
+const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => console.log(`💈 Salon Service running on port ${PORT}`));

@@ -13,5 +13,5 @@ app.get('/', (req, res) => {
     res.json({ success: true, message: 'Location Service is live. Geospatial queries go here.' });
 });
 
-const PORT = 5004;
+const PORT = process.env.PORT || 5004;
 app.listen(PORT, () => console.log(`📍 Location Service running on port ${PORT}`));

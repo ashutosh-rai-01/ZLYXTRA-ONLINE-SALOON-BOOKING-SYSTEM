@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
@@ -8,12 +9,12 @@ app.use(cors());
 
 // Define Microservice Targets
 const SERVICES = {
-    auth: 'http://localhost:5001',
-    salon: 'http://localhost:5002',
-    booking: 'http://localhost:5003',
-    location: 'http://localhost:5004',
-    notification: 'http://localhost:5005',
-    admin: 'http://localhost:5006',
+    auth: process.env.AUTH_SERVICE_URL || 'http://localhost:5001',
+    salon: process.env.SALON_SERVICE_URL || 'http://localhost:5002',
+    booking: process.env.BOOKING_SERVICE_URL || 'http://localhost:5003',
+    location: process.env.LOCATION_SERVICE_URL || 'http://localhost:5004',
+    notification: process.env.NOTIFICATION_SERVICE_URL || 'http://localhost:5005',
+    admin: process.env.ADMIN_SERVICE_URL || 'http://localhost:5006',
 };
 
 // Route to Services
@@ -25,7 +26,7 @@ app.use('/api/admin', createProxyMiddleware({ target: SERVICES.admin, changeOrig
 app.use('/api/location', createProxyMiddleware({ target: SERVICES.location, changeOrigin: true }));
 app.use('/api/notifications', createProxyMiddleware({ target: SERVICES.notification, changeOrigin: true }));
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 API Gateway running on port ${PORT}`);
     console.log(`Routes mapping:`);
