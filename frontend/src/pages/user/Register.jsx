@@ -1,26 +1,50 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { Scissors, ArrowLeft } from 'lucide-react';
+import { Scissors, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
 
 function Register() {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [popup, setPopup] = useState({ isOpen: false, status: 'loading', title: '', message: '' });
     const { register } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setPopup({
+            isOpen: true,
+            status: 'loading',
+            title: 'Creating Account',
+            message: 'Setting up your profile, please wait...'
+        });
         try {
-            const res = await register(name, phone, password, 'user');
-            if (res.user.role === 'admin') navigate('/admin/dashboard');
-            else if (res.user.role === 'owner') navigate('/owner/dashboard');
-            else navigate('/home');
+            const res = await register(name, phone, password, 'user', email);
+            setPopup({
+                isOpen: true,
+                status: 'success',
+                title: 'Account Created!',
+                message: 'Your account is ready. Redirecting...'
+            });
+            setTimeout(() => {
+                setPopup(p => ({ ...p, isOpen: false }));
+                if (res.user.role === 'admin') navigate('/admin/dashboard');
+                else if (res.user.role === 'owner') navigate('/owner/dashboard');
+                else navigate('/home');
+            }, 1200);
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+            const errMsg = err.response?.data?.message || 'Registration failed. Please try again.';
+            setPopup({
+                isOpen: true,
+                status: 'error',
+                title: 'Registration Failed',
+                message: errMsg
+            });
+            setTimeout(() => setPopup(p => ({ ...p, isOpen: false })), 2500);
         }
     };
 
@@ -108,6 +132,18 @@ function Register() {
                     </div>
                     
                     <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label>Email Address <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 'normal' }}>(Optional)</span></label>
+                        <input 
+                            type="email"
+                            placeholder="Enter your email for notifications"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="form-input"
+                            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+                        />
+                    </div>
+                    
+                    <div className="form-group" style={{ marginBottom: 0 }}>
                         <label>Create Password</label>
                         <input 
                             type="password"
@@ -120,7 +156,7 @@ function Register() {
                         />
                     </div>
                     
-                    <button type="submit" className="btn-primary" style={{ marginTop: '16px', height: '48px', borderRadius: '12px' }}>
+                    <button type="submit" data-no-loader="true" className="btn-primary" style={{ marginTop: '16px', height: '48px', borderRadius: '12px' }}>
                         Sign Up
                     </button>
                 </form>
@@ -130,6 +166,31 @@ function Register() {
                     Already have an account? <span onClick={() => navigate('/login')} style={{ color: 'var(--primary)', fontWeight: '700', cursor: 'pointer' }}>Log In</span>
                 </div>
             </div>
+
+            {/* Status Modal Overlay */}
+            {popup.isOpen && (
+                <div className="status-popup-overlay">
+                    <div className="status-popup-card">
+                        {popup.status === 'loading' && (
+                            <div className="spinner-ring">
+                                <div></div><div></div><div></div><div></div>
+                            </div>
+                        )}
+                        {popup.status === 'success' && (
+                            <div className="icon-circle icon-success">
+                                <CheckCircle2 size={32} />
+                            </div>
+                        )}
+                        {popup.status === 'error' && (
+                            <div className="icon-circle icon-error">
+                                <XCircle size={32} />
+                            </div>
+                        )}
+                        <h3 className="status-popup-text">{popup.title}</h3>
+                        <p className="status-popup-subtext">{popup.message}</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

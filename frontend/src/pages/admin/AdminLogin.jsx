@@ -1,35 +1,62 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, ArrowLeft } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
 
 function AdminLogin() {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [popup, setPopup] = useState({ isOpen: false, status: 'loading', title: '', message: '' });
     
     const navigate = useNavigate();
     const { login, logout } = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError('');
+        setPopup({
+            isOpen: true,
+            status: 'loading',
+            title: 'Verifying Admin Authority',
+            message: 'Initializing control center session...'
+        });
         try {
             const res = await login(phone, password);
             
             if (res.user.role !== 'admin') {
                 logout();
-                setError('Unauthorized access. Admin portal is strictly restricted.');
+                setPopup({
+                    isOpen: true,
+                    status: 'error',
+                    title: 'Access Denied',
+                    message: 'Unauthorized access. Admin portal is strictly restricted.'
+                });
+                setTimeout(() => setPopup(p => ({ ...p, isOpen: false })), 3000);
                 return;
             }
-            navigate('/admin/dashboard');
+            
+            setPopup({
+                isOpen: true,
+                status: 'success',
+                title: 'System Access Granted',
+                message: 'Admin authorization successful. Loading control panel...'
+            });
+            
+            setTimeout(() => {
+                setPopup(p => ({ ...p, isOpen: false }));
+                navigate('/admin/dashboard');
+            }, 1200);
             
         } catch (err) {
-            setError(err.response?.data?.message || "Invalid Admin Credentials");
-        } finally {
-            setLoading(false);
+            const errMsg = err.response?.data?.message || 'Invalid Admin Credentials';
+            setPopup({
+                isOpen: true,
+                status: 'error',
+                title: 'System Rejection',
+                message: errMsg
+            });
+            setTimeout(() => setPopup(p => ({ ...p, isOpen: false })), 2500);
         }
     };
 
@@ -56,7 +83,7 @@ function AdminLogin() {
                         type="text" 
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Admin ID (Phone)"
+                        placeholder="Admin ID (Phone or Email)"
                         style={{ padding: '16px', borderRadius: '12px', backgroundColor: '#1e293b', border: '1px solid #334155', color: 'white', fontSize: '1.1rem' }}
                         required
                     />
@@ -69,11 +96,36 @@ function AdminLogin() {
                         required
                     />
                     
-                    <button type="submit" style={{ padding: '16px', borderRadius: '12px', backgroundColor: '#10b981', color: 'white', border: 'none', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', marginTop: '16px' }} disabled={loading}>
-                        {loading ? 'Authenticating...' : 'Enter System'}
+                    <button type="submit" data-no-loader="true" style={{ padding: '16px', borderRadius: '12px', backgroundColor: '#10b981', color: 'white', border: 'none', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', marginTop: '16px' }} disabled={popup.isOpen && popup.status === 'loading'}>
+                        {popup.isOpen && popup.status === 'loading' ? 'Authenticating...' : 'Enter System'}
                     </button>
                 </form>
             </div>
+
+            {/* Status Modal Overlay */}
+            {popup.isOpen && (
+                <div className="status-popup-overlay">
+                    <div className="status-popup-card">
+                        {popup.status === 'loading' && (
+                            <div className="spinner-ring">
+                                <div></div><div></div><div></div><div></div>
+                            </div>
+                        )}
+                        {popup.status === 'success' && (
+                            <div className="icon-circle icon-success">
+                                <CheckCircle2 size={32} />
+                            </div>
+                        )}
+                        {popup.status === 'error' && (
+                            <div className="icon-circle icon-error">
+                                <XCircle size={32} />
+                            </div>
+                        )}
+                        <h3 className="status-popup-text">{popup.title}</h3>
+                        <p className="status-popup-subtext">{popup.message}</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

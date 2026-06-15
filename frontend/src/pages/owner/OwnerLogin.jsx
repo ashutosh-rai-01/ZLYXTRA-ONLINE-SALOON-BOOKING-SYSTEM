@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { Store, ArrowLeft } from 'lucide-react';
+import { Store, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
 
 function OwnerLogin() {
     const [phone, setPhone] = useState('');
@@ -9,15 +9,20 @@ function OwnerLogin() {
     const [isRegister, setIsRegister] = useState(false);
     const [name, setName] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [popup, setPopup] = useState({ isOpen: false, status: 'loading', title: '', message: '' });
     
     const navigate = useNavigate();
     const { login, register, logout } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError('');
+        setPopup({
+            isOpen: true,
+            status: 'loading',
+            title: isRegister ? 'Registering Partner' : 'Verifying Account',
+            message: isRegister ? 'Creating your salon partner account...' : 'Authenticating credentials...'
+        });
         try {
             let res;
             if (isRegister) {
@@ -28,14 +33,36 @@ function OwnerLogin() {
             
             if (res.user.role !== 'owner') {
                 logout();
-                setError('This login is strictly for Salon Partners. Customers must use the Customer Portal.');
+                setPopup({
+                    isOpen: true,
+                    status: 'error',
+                    title: 'Access Restricted',
+                    message: 'This portal is strictly for Salon Partners. Customers must use the Customer Portal.'
+                });
+                setTimeout(() => setPopup(p => ({ ...p, isOpen: false })), 3000);
                 return;
             }
-            navigate('/owner/dashboard');
+            
+            setPopup({
+                isOpen: true,
+                status: 'success',
+                title: isRegister ? 'Welcome to ZLYXTRA!' : 'Welcome Back!',
+                message: isRegister ? 'Salon partner account created successfully. Redirecting...' : `Logged in as ${res.user.name}. Redirecting...`
+            });
+            
+            setTimeout(() => {
+                setPopup(p => ({ ...p, isOpen: false }));
+                navigate('/owner/dashboard');
+            }, 1200);
         } catch (err) {
-            setError(err.response?.data?.message || 'Authentication failed');
-        } finally {
-            setLoading(false);
+            const errMsg = err.response?.data?.message || 'Authentication failed. Please check your inputs.';
+            setPopup({
+                isOpen: true,
+                status: 'error',
+                title: 'Authentication Failed',
+                message: errMsg
+            });
+            setTimeout(() => setPopup(p => ({ ...p, isOpen: false })), 2500);
         }
     };
 
@@ -69,8 +96,8 @@ function OwnerLogin() {
                         />
                     )}
                     <input 
-                        type="tel"
-                        placeholder="Phone Number"
+                        type="text"
+                        placeholder="Phone Number or Email"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         style={{ padding: '16px', borderRadius: '12px', backgroundColor: '#1e293b', border: '1px solid #334155', color: 'white', fontSize: '1.1rem' }}
@@ -85,8 +112,8 @@ function OwnerLogin() {
                         required
                     />
                     
-                    <button type="submit" style={{ padding: '16px', borderRadius: '12px', backgroundColor: '#8b5cf6', color: 'white', border: 'none', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', marginTop: '16px' }} disabled={loading}>
-                        {loading ? 'Processing...' : (isRegister ? 'Create Account' : 'Log In')}
+                    <button type="submit" data-no-loader="true" style={{ padding: '16px', borderRadius: '12px', backgroundColor: '#8b5cf6', color: 'white', border: 'none', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', marginTop: '16px' }} disabled={popup.isOpen && popup.status === 'loading'}>
+                        {popup.isOpen && popup.status === 'loading' ? 'Processing...' : (isRegister ? 'Create Account' : 'Log In')}
                     </button>
                 </form>
 
@@ -97,6 +124,31 @@ function OwnerLogin() {
                     </span>
                 </div>
             </div>
+
+            {/* Status Modal Overlay */}
+            {popup.isOpen && (
+                <div className="status-popup-overlay">
+                    <div className="status-popup-card">
+                        {popup.status === 'loading' && (
+                            <div className="spinner-ring">
+                                <div></div><div></div><div></div><div></div>
+                            </div>
+                        )}
+                        {popup.status === 'success' && (
+                            <div className="icon-circle icon-success">
+                                <CheckCircle2 size={32} />
+                            </div>
+                        )}
+                        {popup.status === 'error' && (
+                            <div className="icon-circle icon-error">
+                                <XCircle size={32} />
+                            </div>
+                        )}
+                        <h3 className="status-popup-text">{popup.title}</h3>
+                        <p className="status-popup-subtext">{popup.message}</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import Welcome from './pages/user/Welcome';
 import Login from './pages/user/Login';
@@ -31,6 +31,64 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminSalons from './pages/admin/AdminSalons';
 import AdminBookings from './pages/admin/AdminBookings';
 import AdminUsers from './pages/admin/AdminUsers';
+
+// Global Loader Wrapper to handle button clicks and route transition animations
+function GlobalLoaderWrapper({ children }) {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  // Trigger loader on location change (route transition)
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 450); // Smooth premium transition delay
+    return () => clearTimeout(timer);
+  }, [location.pathname, location.search]);
+
+  // Intercept all button, link, and interactive element clicks
+  useEffect(() => {
+    const handleGlobalClick = (e) => {
+      const btn = e.target.closest('button, a, [role="button"]');
+      if (btn) {
+        // Exclude specific elements that have their own custom popups
+        if (
+          btn.classList.contains('no-loader') || 
+          btn.getAttribute('data-no-loader') === 'true' ||
+          btn.getAttribute('type') === 'button' && btn.closest('.form-group') // exclude simple toggles
+        ) {
+          return;
+        }
+
+        setLoading(true);
+        // Safety timeout to dismiss loader if no navigation occurs
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+      }
+    };
+
+    window.addEventListener('click', handleGlobalClick);
+    return () => window.removeEventListener('click', handleGlobalClick);
+  }, []);
+
+  return (
+    <>
+      {children}
+      {loading && (
+        <div className="status-popup-overlay">
+          <div className="status-popup-card" style={{ maxWidth: '180px', padding: '24px 16px', borderRadius: '20px' }}>
+            <div className="spinner-ring">
+              <div></div><div></div><div></div><div></div>
+            </div>
+            <h4 style={{ margin: '8px 0 0 0', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Loading...</h4>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 // Strict Guard for Customer pages
 const CustomerRoute = ({ user, children }) => {
@@ -84,8 +142,9 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Welcome />} />
+      <GlobalLoaderWrapper>
+        <Routes>
+          <Route path="/" element={<Welcome />} />
         <Route path="/login" element={!user ? <Login /> : <Navigate to={getDashboardRoute()} />} />
         <Route path="/register" element={!user ? <Register /> : <Navigate to={getDashboardRoute()} />} />
         
@@ -121,6 +180,7 @@ function App() {
           <Route path="users" element={<AdminUsers />} />
         </Route>
       </Routes>
+      </GlobalLoaderWrapper>
     </Router>
   );
 }

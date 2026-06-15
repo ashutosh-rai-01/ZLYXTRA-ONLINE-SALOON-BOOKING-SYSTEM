@@ -6,6 +6,7 @@ const { protect } = require('../middleware/authMiddleware');
 const mongoose = require('mongoose');
 const { mockUsers } = require('../db/mockStore');
 const bcrypt = require('bcryptjs');
+const sendEmail = require('../utils/sendEmail');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -14,12 +15,144 @@ const generateToken = (id) => {
     });
 };
 
+// Helper to send registration notifications (Email & simulated SMS)
+const dispatchWelcomeNotifications = async (user, email) => {
+    // 1. Log SMS notification in console
+    console.log('\n============================================================');
+    console.log('📱  SMS NOTIFICATION SENT');
+    console.log(`To:      ${user.phone}`);
+    console.log(`Message: Welcome to ZLYXTRA, ${user.name}! Your account has been successfully registered. Enjoy premier salon bookings.`);
+    console.log('============================================================\n');
+
+    // 2. Send email notification if email is provided
+    if (email) {
+        try {
+            const htmlTemplate = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
+                <!-- Header -->
+                <div style="text-align: center; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9;">
+                    <div style="display: inline-block; background: linear-gradient(135deg, #3b82f6, #1d4ed8); width: 48px; height: 48px; border-radius: 12px; line-height: 48px; text-align: center; color: white; font-size: 24px; font-weight: bold; margin-bottom: 12px;">✂️</div>
+                    <h2 style="color: #0f172a; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">Welcome to ZLYXTRA!</h2>
+                    <p style="color: #64748b; font-size: 14px; margin: 4px 0 0 0;">Your Premium Salon Booking Companion</p>
+                </div>
+                
+                <!-- Body -->
+                <div style="padding: 24px 0;">
+                    <p style="color: #334155; font-size: 16px; line-height: 1.6; margin-top: 0;">Hello <strong>${user.name}</strong>,</p>
+                    <p style="color: #334155; font-size: 15px; line-height: 1.6;">Thank you for registering at ZLYXTRA! Your account has been successfully created. We are excited to help you match and book with the absolute best premium salons in your area.</p>
+                    
+                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin: 24px 0;">
+                        <h4 style="color: #0f172a; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Account Details</h4>
+                        <table style="width: 100%; font-size: 14px; color: #475569; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 4px 0; font-weight: 600;">Full Name:</td>
+                                <td style="padding: 4px 0;">${user.name}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; font-weight: 600;">Phone Number:</td>
+                                <td style="padding: 4px 0;">${user.phone}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; font-weight: 600;">Account Role:</td>
+                                <td style="padding: 4px 0; text-transform: capitalize;">${user.role}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p style="color: #334155; font-size: 15px; line-height: 1.6;">Here is what you can do next:</p>
+                    <ul style="color: #475569; font-size: 14px; line-height: 1.6; padding-left: 20px;">
+                        <li><strong>Find Salons:</strong> Explore local unisex makeup studios and salons.</li>
+                        <li><strong>Smart Match:</strong> Match with stylists that fit your budget, location, and style preferences.</li>
+                        <li><strong>Manage Bookings:</strong> Book appointments with instant slot confirmations and receive active notifications.</li>
+                    </ul>
+                </div>
+                
+                <!-- Footer -->
+                <div style="text-align: center; padding-top: 24px; border-top: 1px solid #f1f5f9; color: #94a3b8; font-size: 12px; line-height: 1.5;">
+                    <p style="margin: 0;">This email confirms your registration for the ZLYXTRA Salon Booking System.</p>
+                    <p style="margin: 4px 0 0 0;">&copy; ${new Date().getFullYear()} ZLYXTRA Inc. All rights reserved.</p>
+                </div>
+            </div>
+            `;
+            await sendEmail({
+                email,
+                subject: 'Welcome to ZLYXTRA! ✂️ Your Salon Booking Companion',
+                message: `Hello ${user.name},\n\nWelcome to ZLYXTRA! Your account has been successfully created under the phone number ${user.phone}.\n\nThank you for choosing ZLYXTRA!`,
+                html: htmlTemplate
+            });
+        } catch (emailError) {
+            console.error('⚠️ Failed to dispatch welcome email:', emailError.message);
+        }
+    }
+};
+
+// Helper to send login alerts
+const dispatchLoginNotifications = async (user, email) => {
+    if (email) {
+        try {
+            const htmlTemplate = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
+                <!-- Header -->
+                <div style="text-align: center; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9;">
+                    <div style="display: inline-block; background: linear-gradient(135deg, #10b981, #059669); width: 48px; height: 48px; border-radius: 12px; line-height: 48px; text-align: center; color: white; font-size: 24px; font-weight: bold; margin-bottom: 12px;">🔑</div>
+                    <h2 style="color: #0f172a; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">ZLYXTRA Login Alert</h2>
+                    <p style="color: #64748b; font-size: 14px; margin: 4px 0 0 0;">New successful login detected</p>
+                </div>
+                
+                <!-- Body -->
+                <div style="padding: 24px 0;">
+                    <p style="color: #334155; font-size: 16px; line-height: 1.6; margin-top: 0;">Hello <strong>${user.name}</strong>,</p>
+                    <p style="color: #334155; font-size: 15px; line-height: 1.6;">Your ZLYXTRA account has been successfully accessed.</p>
+                    
+                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin: 24px 0;">
+                        <h4 style="color: #0f172a; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Session Information</h4>
+                        <table style="width: 100%; font-size: 14px; color: #475569; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 4px 0; font-weight: 600;">Account:</td>
+                                <td style="padding: 4px 0;">${user.phone.replace(/(\d{3})\d{4}(\d{3})/, '$1****$2')}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; font-weight: 600;">Time:</td>
+                                <td style="padding: 4px 0;">${new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })} (IST)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; font-weight: 600;">Status:</td>
+                                <td style="padding: 4px 0; color: #10b981; font-weight: 600;">Logged In Successfully</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p style="color: #334155; font-size: 14px; line-height: 1.6; font-style: italic; background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 12px;">
+                        <strong>Note:</strong> If this was you, you can safely ignore this email. If you did not authorize this login, please change your password immediately in your profile dashboard.
+                    </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="text-align: center; padding-top: 24px; border-top: 1px solid #f1f5f9; color: #94a3b8; font-size: 12px; line-height: 1.5;">
+                    <p style="margin: 0;">This email is a security notification regarding your ZLYXTRA account.</p>
+                    <p style="margin: 4px 0 0 0;">&copy; ${new Date().getFullYear()} ZLYXTRA Inc. All rights reserved.</p>
+                </div>
+            </div>
+            `;
+            await sendEmail({
+                email,
+                subject: 'ZLYXTRA Login Notification',
+                message: `Hello ${user.name},\n\nWe detected a new sign-in to your ZLYXTRA account associated with the phone number ${user.phone}.\n\nIf this was not you, please secure your account immediately.`,
+                html: htmlTemplate
+            });
+        } catch (emailError) {
+            console.error('⚠️ Failed to dispatch login alert email:', emailError.message);
+        }
+    }
+};
+
+
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
 router.post('/register', async (req, res) => {
     try {
-        const { name, phone, password, role } = req.body;
+        const { name, phone, email, password, role } = req.body;
 
         if (!name || !phone || !password) {
             return res.status(400).json({ success: false, message: 'Please provide name, phone and password' });
@@ -30,13 +163,14 @@ router.post('/register', async (req, res) => {
             const existing = mockUsers.find(u => u.phone === phone);
             if (existing) return res.status(400).json({ success: false, message: 'User already exists' });
 
-            const salt = await bcrypt.genSalt(10);
+            const salt = await bcrypt.genSalt(8);
             const hashedPassword = await bcrypt.hash(password, salt);
 
             const newUser = {
                 _id: Math.random().toString(36).substr(2, 9),
                 name,
                 phone,
+                email,
                 password: hashedPassword,
                 role: role || 'user',
                 isBlocked: false,
@@ -45,10 +179,14 @@ router.post('/register', async (req, res) => {
             };
             mockUsers.push(newUser);
             const token = generateToken(newUser._id);
+            
+            // Dispatch notifications
+            dispatchWelcomeNotifications(newUser, email);
+
             return res.status(201).json({
                 success: true,
                 token,
-                user: { id: newUser._id, name, phone, role: newUser.role }
+                user: { id: newUser._id, name, phone, email: newUser.email, role: newUser.role }
             });
         }
         // --------------------------
@@ -63,15 +201,20 @@ router.post('/register', async (req, res) => {
         const user = await User.create({
             name,
             phone,
+            email,
             password,
             role: role || 'user'
         });
 
         const token = generateToken(user._id);
+
+        // Dispatch notifications
+        dispatchWelcomeNotifications(user, email);
+
         res.status(201).json({
             success: true,
             token,
-            user: { id: user._id, name: user.name, phone: user.phone, role: user.role }
+            user: { id: user._id, name: user.name, phone: user.phone, email: user.email, role: user.role }
         });
 
     } catch (error) {
@@ -87,7 +230,7 @@ router.post('/login', async (req, res) => {
         const { phone, password } = req.body;
 
         if (!phone || !password) {
-            return res.status(400).json({ success: false, message: 'Please provide phone and password' });
+            return res.status(400).json({ success: false, message: 'Please provide phone or email and password' });
         }
 
         // --- IN-MEMORY FALLBACK ---
@@ -101,7 +244,7 @@ router.post('/login', async (req, res) => {
                 });
             }
 
-            const user = mockUsers.find(u => u.phone === phone);
+            const user = mockUsers.find(u => u.phone === phone || (u.email && u.email.toLowerCase() === phone.toLowerCase()));
             if (!user) return res.status(401).json({ success: false, message: 'Invalid credentials' });
 
             const isMatch = await bcrypt.compare(password, user.password);
@@ -109,16 +252,24 @@ router.post('/login', async (req, res) => {
 
             if (user.isBlocked) return res.status(403).json({ success: false, message: 'Account has been blocked by admin' });
 
+            // Dispatch login email alert if configured
+            dispatchLoginNotifications(user, user.email);
+
             return res.status(200).json({
                 success: true,
                 token: generateToken(user._id),
-                user: { id: user._id, name: user.name, phone: user.phone, role: user.role }
+                user: { id: user._id, name: user.name, phone: user.phone, email: user.email || '', role: user.role }
             });
         }
         // --------------------------
 
-        // Check for user
-        const user = await User.findOne({ phone }).select('+password');
+        // Check for user by phone or email
+        const user = await User.findOne({
+            $or: [
+                { phone: phone },
+                { email: phone.toLowerCase() }
+            ]
+        }).select('+password');
         if (!user) {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
@@ -135,10 +286,14 @@ router.post('/login', async (req, res) => {
         }
 
         const token = generateToken(user._id);
+
+        // Dispatch login email alert if configured
+        dispatchLoginNotifications(user, user.email);
+
         res.status(200).json({
             success: true,
             token,
-            user: { id: user._id, name: user.name, phone: user.phone, role: user.role }
+            user: { id: user._id, name: user.name, phone: user.phone, email: user.email || '', role: user.role }
         });
 
     } catch (error) {
